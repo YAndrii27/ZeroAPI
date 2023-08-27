@@ -3,8 +3,8 @@ from typing import Sequence
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy.future import select
 
-from models.notes import NoteModel
-from models.users import UserModel
+from models.database.notes import NoteModel
+from models.database.users import UserModel
 
 
 class NoteService:

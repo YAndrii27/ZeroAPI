@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from sqlalchemy.future import select
 
-from models.users import UserModel
+from models.database.users import UserModel
 
 
 class UserService:
@@ -17,7 +17,7 @@ class UserService:
                 user = query.one_or_none()
                 return user
 
-    async def get_by_login(self, login: int) -> UserModel | None:
+    async def get_by_login(self, login: str) -> UserModel | None:
         async with self._session() as session:
             async with session.begin():
                 query = await session.scalars(
