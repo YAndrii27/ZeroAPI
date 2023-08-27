@@ -1,12 +1,14 @@
-from os import getenv
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-PGUSER = getenv("PGUSER", "")
-PGHOST = getenv("PGHOST", "")
-PGPORT = getenv("PGPORT", "")
-PGDATABASE = getenv("PGDATABASE", "")
+from models.database.base import BaseModel
+from .env import PGUSER, PGHOST, PGPORT, PGDATABASE
 
 engine = create_async_engine(
-    F"postgresql://{PGUSER}@{PGHOST}:{PGPORT}/{PGDATABASE}"
+    F"postgresql+asyncpg://{PGUSER}@{PGHOST}:{PGPORT}/{PGDATABASE}"
 )
 session = async_sessionmaker(engine)
+
+
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(BaseModel.metadata.create_all)

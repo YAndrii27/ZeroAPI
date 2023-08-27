@@ -22,5 +22,5 @@ cd zeroapi
 ```
 Run server:
 ```
-poetry run python main.py
+poetry run uvicorn --port 8080 main:app
 ```
