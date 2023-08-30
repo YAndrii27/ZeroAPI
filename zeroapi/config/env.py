@@ -9,3 +9,5 @@ PGUSER = env.str("PGUSER")
 PGHOST = env.str("PGHOST")
 PGPORT = env.int("PGPORT")
 PGDATABASE = env.str("PGDATABASE")
+
+SECRET = env.str("SECRET")

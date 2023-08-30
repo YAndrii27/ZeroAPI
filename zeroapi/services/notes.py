@@ -5,23 +5,27 @@ from sqlalchemy.future import select
 
 from models.database.notes import NoteModel
 from models.database.users import UserModel
+from models.pydantic.requests import SaveNoteRequest
 
 
 class NoteService:
     def __init__(self, session: async_sessionmaker[AsyncSession]) -> None:
         self._session = session
 
-    async def get_all_by_owner(
+    async def get_by_owner(
             self,
             owner_id: int | None = None,
-            owner_login: int | None = None
-    ) -> Sequence[NoteModel] | None:
+            owner_login: int | None = None,
+            count: int | None = 0
+    ) -> Sequence[NoteModel] | NoteModel | None:
         """Returns all notes which has user with
         correspond login or ID. One of optional params
         is required
 
         @param owner_id: int | None - user ID
         @param owner_login: int | None - user login
+        @param count: int | None - number of notes to return. If equals 0
+        returns all rows
 
         @returns Sequence[NoteModel] | None - list of NoteModel's or None if
         user has no notes
@@ -44,7 +48,11 @@ class NoteService:
                     query = await session.scalars(
                         select(NoteModel).where(NoteModel.owner == owner)
                     )
-                    return query.all()
+                    if count == 0:
+                        return query.all()
+                    elif count == 1:
+                        return query.first()
+                    return query.fetchmany(size=count)
         return
 
     async def get_one_by_id(self, id: int) -> NoteModel | None:
@@ -61,7 +69,11 @@ class NoteService:
                 note: NoteModel | None = query.one_or_none()
                 return note
 
-    async def save(self, note: NoteModel | None = None, **kwargs):
+    async def save(
+            self,
+            note: NoteModel | SaveNoteRequest | None = None,
+            **kwargs
+    ):
         """Saves note which is in form of SQLAlchemy model
         or given as correspond params
 
@@ -70,6 +82,8 @@ class NoteService:
         of the note
 
         @returns bool - True if note was saved correct"""
+        if isinstance(note, SaveNoteRequest):
+            note = NoteModel(**note.dict())
         async with self._session() as session:
             async with session.begin():
                 if note:

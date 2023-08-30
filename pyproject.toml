@@ -12,6 +12,8 @@ sqlalchemy = "^2.0.20"
 uvicorn = "^0.23.2"
 envparse = "^0.2.0"
 asyncpg = "^0.28.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["argon2"], version = "^1.7.4"}
 
 
 [build-system]
