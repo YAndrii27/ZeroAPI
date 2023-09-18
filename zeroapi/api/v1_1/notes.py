@@ -10,7 +10,7 @@ note_router = APIRouter(prefix="/note")
 service = NoteService(session=session)
 
 
-@note_router.post("/get")
+@note_router.post("/get", tags=["notes"], deprecated=True)
 async def get_note(request: GetNotesRequest):
     if request.note_id:
         note = await service.get_one_by_id(id=request.note_id)
@@ -26,7 +26,8 @@ async def get_note(request: GetNotesRequest):
             status_code=200
         )
 
-@note_router.post("/save")
+
+@note_router.post("/save", tags=["notes"], deprecated=True)
 async def save_note(request: SaveNoteRequest):
     await service.save(request)
     return Response(

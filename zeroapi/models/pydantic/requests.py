@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 from enums.roles import Roles
-from models.database.users import UserModel
+from models.pydantic.users import UserModel
 
 
 class GetUserRequest(BaseModel):
@@ -22,12 +22,18 @@ class SaveUserRequest(BaseModel):
     password_hash: Optional[str] = None
     role: Optional[Roles] = None
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class SaveNoteRequest(BaseModel):
     id: Optional[int] = None
     title: Optional[str] = None
     text: Optional[str] = None
     owner: Optional[UserModel] = None
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class LoginRequest(BaseModel):

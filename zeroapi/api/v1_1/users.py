@@ -9,7 +9,7 @@ user_router = APIRouter(prefix="/user")
 service = UserService(session=session)
 
 
-@user_router.post("/get")
+@user_router.post("/get", tags=["users"], deprecated=True)
 async def get_user(request: GetUserRequest):
     if request.id:
         user = await service.get_by_id(id=request.id)
@@ -28,7 +28,7 @@ async def get_user(request: GetUserRequest):
     )
 
 
-@user_router.post("/save")
+@user_router.post("/save", tags=["users"], deprecated=True)
 async def save_user(request: SaveUserRequest):
     await service.save(request)
     return Response(
