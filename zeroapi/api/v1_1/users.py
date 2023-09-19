@@ -9,8 +9,9 @@ user_router = APIRouter(prefix="/user")
 service = UserService(session=session)
 
 
-@user_router.post("/get", tags=["users"], deprecated=True)
+@user_router.post("/get", tags=["users"])
 async def get_user(request: GetUserRequest):
+    """Get user by their ID or login. One of two field is required"""
     if request.id:
         user = await service.get_by_id(id=request.id)
     elif request.login:
@@ -28,8 +29,9 @@ async def get_user(request: GetUserRequest):
     )
 
 
-@user_router.post("/save", tags=["users"], deprecated=True)
+@user_router.post("/save", tags=["users"])
 async def save_user(request: SaveUserRequest):
+    """Updates/Creates user data"""
     await service.save(request)
     return Response(
         content=json.dumps({"message": "success"}),

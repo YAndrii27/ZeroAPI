@@ -1,6 +1,6 @@
 # Basic CRUD API  
   
-Created for show my skills in FastAPI + REST APIs.  
+Created for shows my skills in Python + FastAPI + REST APIs.  
   
 ## Installation  
   
@@ -16,11 +16,12 @@ Install dependencies:
 ```
 poetry install
 ```
-Gi to main work directory:
+Go to main work directory:
 ```
 cd zeroapi
 ```
 Run server:
 ```
-poetry run uvicorn --port 8080 main:app
-```
+poetry run uvicorn --port 8080 main:app  
+```  
+Open your browser and go to [docs](127.0.0.1:8080/docs)
