@@ -13,8 +13,10 @@ auth_router = APIRouter(prefix="/auth")
 service = UserService(session=session)
 
 
-@auth_router.post("/login")
+@auth_router.post("/login", tags=["auth"])
 async def login(request: LoginRequest):
+    """Verifies auth data and returns token which can be used
+    for perform futher operations"""
     user = await service.get_by_login(request.login)
     if user:
         try:
@@ -32,8 +34,10 @@ async def login(request: LoginRequest):
             )
 
 
-@auth_router.post("/register")
+@auth_router.post("/register", tags=["auth"])
 async def register(request: SaveUserRequest):
+    """Check if login is aviable and if so registers user
+    and returns token which can be used for perform futher operations"""
     user = await service.get_by_login(request.login)
     if not user:
         await service.save(request)
