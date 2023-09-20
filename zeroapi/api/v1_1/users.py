@@ -1,15 +1,20 @@
-from fastapi import APIRouter, HTTPException, Response
-import json
+from quart import Blueprint, Response
+from quart_schema import validate_request
 
 from services.user import UserService
 from config.db import session
 from models.pydantic.requests import GetUserRequest, SaveUserRequest
 
-user_router = APIRouter(prefix="/user")
+user_blueprint = Blueprint(
+    name="user",
+    import_name=__name__,
+    url_prefix="/user"
+)
 service = UserService(session=session)
 
 
-@user_router.post("/get", tags=["users"])
+@user_blueprint.post("/get")
+@validate_request(GetUserRequest)
 async def get_user(request: GetUserRequest):
     """Get user by their ID or login. One of two field is required"""
     if request.id:
@@ -17,23 +22,27 @@ async def get_user(request: GetUserRequest):
     elif request.login:
         user = await service.get_by_login(login=request.login)
     else:
-        raise HTTPException(
-            status_code=400,
-            detail="User ID or Login is required"
+        return Response(
+            status=400,
+            response={"message": "User ID or Login is required"}
         )
     if user:
-        return json.dumps(user.__dict__)
+        return Response(
+            response=user.__dict__,
+            status=200
+        )
     return Response(
-        content=json.dumps({"message": "user not found"}),
-        status_code=400
+        response={"message": "user not found"},
+        status=400
     )
 
 
-@user_router.post("/save", tags=["users"])
+@user_blueprint.post("/save")
+@validate_request(SaveUserRequest)
 async def save_user(request: SaveUserRequest):
     """Updates/Creates user data"""
     await service.save(request)
     return Response(
-        content=json.dumps({"message": "success"}),
-        status_code=201
+        response={"message": "success"},
+        status=201
     )

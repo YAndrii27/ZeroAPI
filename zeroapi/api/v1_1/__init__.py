@@ -1,11 +1,14 @@
-from fastapi import APIRouter
+from quart import Blueprint
 
-from .users import user_router
-from .notes import note_router
-from .auth import auth_router
+from .users import user_blueprint
+from .notes import note_blueprint
+from .auth import auth_blueprint
 
-
-root_router_v1_1 = APIRouter(prefix="/v1.1", deprecated=True)
-root_router_v1_1.include_router(user_router)
-root_router_v1_1.include_router(note_router)
-root_router_v1_1.include_router(auth_router)
+root_blueprint_v1_1 = Blueprint(
+    name="v1_1",
+    import_name=__name__,
+    url_prefix="/v1.1"
+)
+root_blueprint_v1_1.register_blueprint(auth_blueprint)
+root_blueprint_v1_1.register_blueprint(note_blueprint)
+root_blueprint_v1_1.register_blueprint(user_blueprint)

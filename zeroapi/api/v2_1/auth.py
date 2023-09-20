@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response
+from quart import Blueprint, Response
 from passlib.hash import argon2
 from argon2.exceptions import VerifyMismatchError
 from jose import jwt
@@ -9,11 +9,15 @@ from config.db import session
 from services.user import UserService
 from config.env import SECRET
 
-auth_router = APIRouter(prefix="/auth")
+auth_blueprint = Blueprint(
+    name="auth",
+    import_name=__name__,
+    url_prefix="/auth"
+)
 service = UserService(session=session)
 
 
-@auth_router.post("/login", tags=["auth"])
+@auth_blueprint.post("/login")
 async def login(request: LoginRequest):
     """Verifies auth data and returns token which can be used
     for perform futher operations"""
@@ -24,17 +28,18 @@ async def login(request: LoginRequest):
             if verify:
                 token = jwt.encode({"login": user.login}, SECRET)
                 return Response(
-                    content=json.dumps({"message": "success"}),
-                    headers={"Authentification": token}
+                    response={"message": "success"},
+                    status=200,
+                    headers={"Authorization": token}
                 )
         except VerifyMismatchError:
             return Response(
-                content=json.dumps({"message": "incorrect login or password"}),
-                status_code=401
+                response={"message": "incorrect login or password"},
+                status=401
             )
 
 
-@auth_router.post("/register", tags=["auth"])
+@auth_blueprint.post("/register")
 async def register(request: SaveUserRequest):
     """Check if login is aviable and if so registers user
     and returns token which can be used for perform futher operations"""
@@ -43,11 +48,11 @@ async def register(request: SaveUserRequest):
         await service.save(request)
         token = jwt.encode({"login": request.login}, SECRET)
         return Response(
-            content=json.dumps({"message": "success"}),
-            status_code=201,
-            headers={"Authentification": token}
+            response=json.dumps({"message": "success"}),
+            status=201,
+            headers={"Authorization": token}
         )
     return Response(
-        content=json.dumps({"message": "username already used"}),
-        status_code=401
+        response=json.dumps({"message": "username already used"}),
+        status=401
     )

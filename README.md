@@ -2,7 +2,7 @@
   
 Created for shows my skills in Python + FastAPI + REST APIs.  
   
-## Installation  
+## Usage  
   
 Copy repository:  
 ```
@@ -22,6 +22,6 @@ cd zeroapi
 ```
 Run server:
 ```
-poetry run uvicorn --port 8080 main:app  
+poetry run hypercorn --bind localhost:8080 main:app   
 ```  
-Open your browser and go to [docs](127.0.0.1:8080/docs)
+Open your browser and go to docs at localhost:8080/docs (replace localhost with your host adress in case you run this on server)
