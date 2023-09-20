@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import BaseModel
 from enums.roles import Roles
@@ -11,3 +11,4 @@ class UserModel(BaseModel):
     login: Mapped[str] = mapped_column(unique=True)
     password_hash: Mapped[str] = mapped_column()
     role: Mapped[Roles] = mapped_column()
+    notes: Mapped[list["NoteModel"]] = relationship(back_populates="owner")

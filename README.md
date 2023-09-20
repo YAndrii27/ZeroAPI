@@ -22,6 +22,6 @@ cd zeroapi
 ```
 Run server:
 ```
-poetry run uvicorn --port 8080 main:app  
+poetry run hypercorn --bind localhost:8080 main:app   
 ```  
-Open your browser and go to docs at localhost:8080/docs (replace localhost with your host adress in case you run in on server)
+Open your browser and go to docs at localhost:8080/docs (replace localhost with your host adress in case you run this on server)

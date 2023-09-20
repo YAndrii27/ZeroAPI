@@ -1,11 +1,22 @@
-from fastapi import FastAPI
+import logging
+
+from quart import Quart
+from quart_schema import QuartSchema
 
 from config.db import init_db
 from config import env
+from middlewares.auth import AuthMiddleware
 
-from api.v1_1 import root_router_v1_1
-from api.v2_1 import root_router_v2_1
+from api.v1_1 import root_blueprint_v1_1
+from api.v2_1 import root_blueprint_v2_1
 
-app = FastAPI(on_startup=[init_db], title="ZeroAPI")
-app.include_router(root_router_v1_1)
-app.include_router(root_router_v2_1)
+logger = logging.basicConfig(level="WARNING")
+
+app = Quart(__name__)
+schema = QuartSchema(app=app)
+app.startup = init_db
+
+app.register_blueprint(root_blueprint_v1_1)
+app.register_blueprint(root_blueprint_v2_1)
+
+app.asgi_app = AuthMiddleware(app=app.asgi_app)
