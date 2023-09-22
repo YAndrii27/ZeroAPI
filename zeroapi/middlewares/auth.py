@@ -17,7 +17,9 @@ class AuthMiddleware:
             receive: ASGIReceiveCallable,
             send: ASGISendCallable
     ) -> Any:
-        if b"auth" in scope["raw_path"] or scope["raw_path"] == b"/docs":
+        if (
+            b"auth" in scope["raw_path"] or
+                scope["raw_path"] in [b"/docs", b"/openapi.json"]):
             return await self.app(
                 scope=scope,
                 receive=receive,
