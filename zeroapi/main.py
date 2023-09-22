@@ -12,7 +12,7 @@ from api.v2_1 import root_blueprint_v2_1
 
 logger = logging.basicConfig(level="WARNING")
 
-app = Quart(__name__)
+app = Quart("Zero API")
 schema = QuartSchema(app=app)
 app.startup = init_db
 
