@@ -1,8 +1,8 @@
 # Basic CRUD API  
   
-Created for shows my skills in Python + FastAPI + REST APIs.  
+Created for show my skills in Python + Quart.  
   
-## Usage  
+## Running  
   
 Copy repository:  
 ```
@@ -24,4 +24,4 @@ Run server:
 ```
 poetry run hypercorn --bind localhost:8080 main:app   
 ```  
-Open your browser and go to docs at localhost:8080/docs (replace localhost with your host adress in case you run this on server)
+Open your browser and go to docs at localhost:8080/docs (replace localhost with your host adress in case you are running this on server)
